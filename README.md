@@ -69,3 +69,11 @@ npx @gltf-transform/cli optimize models-src/<in>.glb public/models/<out>.glb \
 
 The dress's base-colour texture (a cutting-pattern layout, not fabric) was stripped so it can be tinted.
 `model.tint: true` recolours the fabric to the selected swatch; `false` keeps the model's textures and shows `model.colorway`.
+
+## Deploy (Vercel)
+
+1. Vercel → **Add New → Project** → import `VoidEcommFrontend` (framework: Next.js, defaults are fine).
+2. Add the environment variable `NEXT_PUBLIC_API_URL` = `https://<your-render-service>.onrender.com/api` (Production and Preview). It is baked in at build time, so redeploy after changing it.
+3. Add the resulting Vercel domain(s) to the backend's `CLIENT_ORIGIN` on Render.
+
+Without a reachable backend the site still works on its bundled catalogue, and accounts/orders fall back to the browser's localStorage.

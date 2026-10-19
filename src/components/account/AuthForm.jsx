@@ -18,6 +18,14 @@ export default function AuthForm({ mode }) {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
+  const [slow, setSlow] = useState(false);
+
+  // A sleeping free-tier backend can take ~30s to wake; say so instead of looking stuck.
+  useEffect(() => {
+    if (status !== 'loading') { setSlow(false); return; }
+    const id = setTimeout(() => setSlow(true), 4000);
+    return () => clearTimeout(id);
+  }, [status]);
 
   // Already signed in: go straight on.
   useEffect(() => { if (user) router.replace(next); }, [user, next, router]);
@@ -54,6 +62,7 @@ export default function AuthForm({ mode }) {
             <input id="password" required type="password" minLength={6} autoComplete={isSignup ? 'new-password' : 'current-password'} className="form-control" value={form.password} onChange={set('password')} placeholder={isSignup ? 'At least 6 characters' : ''} />
           </div>
           {error && <p className="text-signal text-sm m-0" role="alert">{error}</p>}
+          {slow && <p className="text-mute text-sm m-0" role="status">Waking up the demo server, this can take up to a minute…</p>}
           <Button type="submit" variant="contained" size="large" fullWidth disabled={status === 'loading'}>
             {status === 'loading' ? 'One moment…' : isSignup ? 'Create account' : 'Sign in'}
           </Button>

@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/cart/CartDrawer';
 import CursorGlow from '@/components/ui/CursorGlow';
 import AuthSync from '@/components/account/AuthSync';
+import { api } from '@/lib/api';
 
 /**
  * Decides between rendering the site directly (desktop / inside the preview iframe)
@@ -19,6 +20,7 @@ export default function AppShell({ children }) {
   const [embedded, setEmbedded] = useState(false);
 
   useEffect(() => {
+    api.wake();
     setEmbedded(window.self !== window.top);
     setMounted(true);
   }, []);

@@ -4,13 +4,14 @@ import {
 import { localLogin, localMe, localOrders, localSaveOrder, localSignup } from './localAccount.js';
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+const AUTH_TIMEOUT = 45000;
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
     ...options,
     cache: 'no-store',
     headers: { 'Content-Type': 'application/json', ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}), ...(options.headers || {}) },
-    signal: options.signal || AbortSignal.timeout(4000),
+    signal: options.signal || AbortSignal.timeout(options.timeout || 4000),
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
@@ -58,11 +59,14 @@ export const api = {
         return order;
       }
     ),
-  // Accounts (backend sessions; browser-only stand-in when the backend is down)
-  signup: (body) => withFallback(() => request('/auth/signup', { method: 'POST', body: JSON.stringify(body) }), () => localSignup(body)),
-  login: (body) => withFallback(() => request('/auth/login', { method: 'POST', body: JSON.stringify(body) }), () => localLogin(body)),
+  // Accounts (backend sessions; browser-only stand-in when the backend is down).
+  // Longer timeout so a sleeping free-tier backend can wake instead of silently creating a browser-only account.
+  signup: (body) => withFallback(() => request('/auth/signup', { method: 'POST', body: JSON.stringify(body), timeout: AUTH_TIMEOUT }), () => localSignup(body)),
+  login: (body) => withFallback(() => request('/auth/login', { method: 'POST', body: JSON.stringify(body), timeout: AUTH_TIMEOUT }), () => localLogin(body)),
   me: (token) => withFallback(() => request('/auth/me', { token }), () => localMe(token)),
   logout: (token) => request('/auth/logout', { method: 'POST', token }).catch(() => {}),
   myOrders: ({ token, user }) => withFallback(() => request('/orders', { token }), () => localOrders(user.id)),
+  /** Fire-and-forget ping so a sleeping backend (e.g. Render free tier) starts waking on page load. */
+  wake: () => fetch(`${BASE}/health`, { cache: 'no-store' }).catch(() => {}),
   newsletter: (email) => withFallback(() => request('/newsletter', { method: 'POST', body: JSON.stringify({ email }) }), () => ({ ok: true, message: 'You are on the list.' })),
 };
