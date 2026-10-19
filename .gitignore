@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.env*.local
+.DS_Store
+
+# Original (unoptimised) 3D sources, ~87MB. Optimised copies live in public/models.
+models-src
+*.log
