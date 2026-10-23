@@ -73,7 +73,7 @@ export function localPriceCart(items = []) {
     })
     .filter(Boolean);
   const subtotal = +lines.reduce((s, l) => s + l.lineTotal, 0).toFixed(2);
-  const shipping = subtotal === 0 || subtotal >= 150 ? 0 : 12;
-  const tax = +(subtotal * 0.08).toFixed(2);
-  return { lines, summary: { subtotal, shipping, tax, total: +(subtotal + shipping + tax).toFixed(2), currency: 'USD', freeShippingThreshold: 150, itemCount: lines.reduce((s, l) => s + l.quantity, 0) } };
+  const shipping = subtotal === 0 || subtotal >= 2999 ? 0 : 149;
+  const tax = Math.round(subtotal * 0.12);
+  return { lines, summary: { subtotal, shipping, tax, total: +(subtotal + shipping + tax).toFixed(2), currency: 'INR', freeShippingThreshold: 2999, itemCount: lines.reduce((s, l) => s + l.quantity, 0) } };
 }

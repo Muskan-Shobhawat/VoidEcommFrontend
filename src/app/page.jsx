@@ -23,7 +23,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero product={heroProduct} />
-      <Marquee items={['Free shipping over $150', 'FW26 drop live', 'Men', 'Women', 'Real-time 3D', 'Limited editions', 'Ships worldwide']} />
+      <Marquee items={['Free shipping over ₹2,999', 'FW26 drop live', 'Men', 'Women', 'Real-time 3D', 'Limited editions', 'Ships worldwide']} />
       <FeaturedRail products={featured.data} />
       <CollectionsSplit collections={collections} />
       <Features />

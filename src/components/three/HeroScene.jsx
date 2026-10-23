@@ -1,5 +1,5 @@
 'use client';
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Sparkles, ContactShadows, MeshDistortMaterial, Torus, AdaptiveDpr } from '@react-three/drei';
 import * as THREE from 'three';
@@ -73,27 +73,39 @@ function HeroGarment({ product, onSelect }) {
 }
 
 export default function HeroScene({ product, onSelect }) {
+  // Stop rendering once the hero scrolls out of view so the GPU is free for the rest of the page.
+  const wrap = useRef(null);
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting));
+    io.observe(wrap.current);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <Canvas
-      dpr={[1, 1.75]}
-      camera={{ position: [0, 0, 9], fov: 38 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-      shadows
-      style={{ position: 'absolute', inset: 0 }}
-    >
-      <Suspense fallback={null}>
-        <Lights />
-        <Rig>
-          {product?.model && <HeroGarment product={product} onSelect={onSelect} />}
-          <Orbits />
-          <Blob position={[-3.9, 2.2, -1.5]} color="#ff5a1f" />
-          <Blob position={[4, -2.2, -2]} color="#c9b6ff" speed={1.5} scale={0.55} />
-          <Blob position={[0.6, 3, -3]} color="#9fe8ff" speed={2.5} scale={0.28} />
-          <Sparkles count={70} scale={[13, 8, 6]} size={2.2} speed={0.4} opacity={0.5} color="#c9b6ff" />
-        </Rig>
-        <ContactShadows position={[0, -3, 0]} opacity={0.45} scale={16} blur={2.8} far={4} color="#000" />
-        <AdaptiveDpr pixelated />
-      </Suspense>
-    </Canvas>
+    <div ref={wrap} className="absolute inset-0">
+      <Canvas
+        frameloop={visible ? 'always' : 'never'}
+        dpr={[1, 1.75]}
+        camera={{ position: [0, 0, 9], fov: 38 }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        shadows
+        style={{ position: 'absolute', inset: 0 }}
+      >
+        <Suspense fallback={null}>
+          <Lights />
+          <Rig>
+            {product?.model && <HeroGarment product={product} onSelect={onSelect} />}
+            <Orbits />
+            <Blob position={[-3.9, 2.2, -1.5]} color="#ff5a1f" />
+            <Blob position={[4, -2.2, -2]} color="#c9b6ff" speed={1.5} scale={0.55} />
+            <Blob position={[0.6, 3, -3]} color="#9fe8ff" speed={2.5} scale={0.28} />
+            <Sparkles count={70} scale={[13, 8, 6]} size={2.2} speed={0.4} opacity={0.5} color="#c9b6ff" />
+          </Rig>
+          <ContactShadows position={[0, -3, 0]} opacity={0.45} scale={16} blur={2.8} far={4} color="#000" />
+          <AdaptiveDpr pixelated />
+        </Suspense>
+      </Canvas>
+    </div>
   );
 }

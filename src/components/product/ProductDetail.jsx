@@ -101,12 +101,12 @@ export default function ProductDetail({ product }) {
               Add to bag — {money(product.price * qty)}
             </Button>
           </div>
-          <p className="mt-3 text-xs text-mute">{product.stock <= 20 ? `Only ${product.stock} left · ` : ''}Free shipping over $150 · 30-day returns</p>
+          <p className="mt-3 text-xs text-mute">{product.stock <= 20 ? `Only ${product.stock} left · ` : ''}Free shipping over ₹2,999 · 30-day returns</p>
 
           <div className="mt-8 border-t hairline">
             {[
               { t: 'Details', c: <ul className="m-0 ps-4 text-mute text-sm flex flex-col gap-1">{product.details.map((d) => <li key={d}>{d}</li>)}</ul> },
-              { t: 'Shipping & returns', c: <p className="m-0 text-mute text-sm">Ships in 1–2 business days. Free standard shipping on orders over $150. Returns accepted within 30 days in original condition.</p> },
+              { t: 'Shipping & returns', c: <p className="m-0 text-mute text-sm">Ships in 1–2 business days. Free standard shipping on orders over ₹2,999. Returns accepted within 30 days in original condition.</p> },
               { t: 'Care', c: <p className="m-0 text-mute text-sm">Machine wash cold, inside out. Do not tumble dry. Do not iron prints or coated surfaces.</p> },
             ].map((row) => (
               <Accordion key={row.t} disableGutters elevation={0} sx={{ bgcolor: 'transparent', borderBottom: '1px solid rgb(var(--bone-rgb) / 0.1)', '&:before': { display: 'none' } }}>

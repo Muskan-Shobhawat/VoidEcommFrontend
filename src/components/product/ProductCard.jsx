@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import ProductImage from './ProductImage';
 import { money } from '@/lib/format';
 
-export default function ProductCard({ product, index = 0, priority = false }) {
+export default function ProductCard({ product, priority = false }) {
   const ref = useRef(null);
   const [colorIdx, setColorIdx] = useState(0);
   const mx = useMotionValue(0.5);
@@ -13,7 +13,9 @@ export default function ProductCard({ product, index = 0, priority = false }) {
   const rx = useSpring(useTransform(my, [0, 1], [8, -8]), { stiffness: 150, damping: 18 });
   const ry = useSpring(useTransform(mx, [0, 1], [-10, 10]), { stiffness: 150, damping: 18 });
 
+  // Tilt follows a mouse only; on touch it would fight the swipe/scroll gesture.
   const onMove = (e) => {
+    if (e.pointerType !== 'mouse') return;
     const r = ref.current.getBoundingClientRect();
     mx.set((e.clientX - r.left) / r.width);
     my.set((e.clientY - r.top) / r.height);
@@ -29,10 +31,6 @@ export default function ProductCard({ product, index = 0, priority = false }) {
       onPointerMove={onMove}
       onPointerLeave={onLeave}
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-5% 0px' }}
-      transition={{ duration: 0.6, delay: Math.min(index * 0.05, 0.4) }}
       className="group relative"
     >
       <Link href={`/product/${product.slug}`} className="block">
@@ -45,11 +43,11 @@ export default function ProductCard({ product, index = 0, priority = false }) {
           <div className="absolute left-3 top-3 flex gap-2">
             {product.isNew && <span className="rounded-full bg-bone px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-void">New</span>}
             {off > 0 && <span className="rounded-full bg-signal px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-night">-{off}%</span>}
-            {product.tags.includes('limited') && <span className="rounded-full glass px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest">Limited</span>}
+            {product.tags.includes('limited') && <span className="rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-white">Limited</span>}
             {product.model && <span className="rounded-full bg-lilac px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-night">3D</span>}
           </div>
           <div className="absolute inset-x-3 bottom-3 translate-y-3 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-            <span className="block w-full rounded-full glass py-2.5 text-center text-xs font-semibold uppercase tracking-widest">{product.model ? 'View in 3D ↗' : 'Quick view ↗'}</span>
+            <span className="block w-full rounded-full bg-black/60 py-2.5 text-white text-center text-xs font-semibold uppercase tracking-widest">{product.model ? 'View in 3D ↗' : 'Quick view ↗'}</span>
           </div>
         </div>
       </Link>

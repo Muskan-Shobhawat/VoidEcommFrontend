@@ -31,7 +31,7 @@ export default function ShopClient({ products, total, categories, params }) {
   const pathname = usePathname();
   const sp = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [price, setPrice] = useState([Number(params.minPrice) || 0, Number(params.maxPrice) || 400]);
+  const [price, setPrice] = useState([Number(params.minPrice) || 0, Number(params.maxPrice) || 12000]);
   const [search, setSearch] = useState(params.search || '');
 
   useEffect(() => setSearch(params.search || ''), [params.search]);
@@ -85,7 +85,7 @@ export default function ShopClient({ products, total, categories, params }) {
       <div>
         <p className="text-[10px] uppercase tracking-[0.25em] text-mute mb-3">Price · {money(price[0])} – {money(price[1])}</p>
         <div className="px-2">
-          <Slider value={price} min={0} max={400} step={10} onChange={(_, v) => setPrice(v)} onChangeCommitted={(_, v) => update({ minPrice: v[0] || '', maxPrice: v[1] >= 400 ? '' : v[1] })} valueLabelDisplay="auto" />
+          <Slider value={price} min={0} max={12000} step={500} onChange={(_, v) => setPrice(v)} onChangeCommitted={(_, v) => update({ minPrice: v[0] || '', maxPrice: v[1] >= 12000 ? '' : v[1] })} valueLabelDisplay="auto" />
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -127,7 +127,7 @@ export default function ShopClient({ products, total, categories, params }) {
             <div className="row g-4 g-md-5">
               {products.map((p, i) => (
                 <div className="col-6 col-md-4" key={p.id}>
-                  <ProductCard product={p} index={i} priority={i < 3} />
+                  <ProductCard product={p} priority={i < 3} />
                 </div>
               ))}
             </div>

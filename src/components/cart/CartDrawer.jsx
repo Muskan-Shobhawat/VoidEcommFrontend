@@ -11,7 +11,7 @@ import { money } from '@/lib/format';
 export default function CartDrawer() {
   const { items, isOpen, close } = useCart();
   const subtotal = items.reduce((n, i) => n + i.price * i.quantity, 0);
-  const remaining = Math.max(0, 150 - subtotal);
+  const remaining = Math.max(0, 2999 - subtotal);
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={close} PaperProps={{ sx: { width: '100vw', maxWidth: 440, display: 'flex', flexDirection: 'column' } }}>
@@ -27,7 +27,7 @@ export default function CartDrawer() {
           <p className="m-0 text-acid">You unlocked free shipping ✦</p>
         )}
         <div className="mt-2 h-1 rounded-full bg-bone/10 overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-signal to-lilac transition-all duration-700" style={{ width: `${Math.min(100, (subtotal / 150) * 100)}%` }} />
+          <div className="h-full bg-gradient-to-r from-signal to-lilac transition-all duration-700" style={{ width: `${Math.min(100, (subtotal / 2999) * 100)}%` }} />
         </div>
       </div>
 

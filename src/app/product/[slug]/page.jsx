@@ -23,8 +23,8 @@ export default async function ProductPage({ params }) {
         <section className="wrap py-16 md:py-24">
           <SectionTitle eyebrow="Complete the look" title="You may also like" />
           <div className="row g-4 g-md-5">
-            {related.map((p, i) => (
-              <div className="col-6 col-md-3" key={p.id}><ProductCard product={p} index={i} /></div>
+            {related.map((p) => (
+              <div className="col-6 col-md-3" key={p.id}><ProductCard product={p} /></div>
             ))}
           </div>
         </section>

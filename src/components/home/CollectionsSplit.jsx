@@ -16,19 +16,32 @@ export default function CollectionsSplit({ collections }) {
         {collections.map((c, i) => (
           <div className="col-12 col-md-6" key={c.slug}>
             <Reveal delay={i * 0.1}>
-              {/* gradient panel looks the same in both themes, so its text is fixed light (snow) */}
+              {/* flat studio panel: theme surface, faint grid, outlined initial; the collection accent only marks details */}
               <Link
                 href={`/shop?gender=${c.slug}`}
-                className="group relative flex flex-col overflow-hidden rounded-3xl shine text-snow min-h-[560px] lg:min-h-[620px]"
-                style={{ containerType: 'inline-size' }}
+                className="group relative flex flex-col overflow-hidden rounded-3xl border hairline bg-ink text-bone min-h-[560px] lg:min-h-[620px] transition-colors duration-500"
+                style={{ containerType: 'inline-size', '--accent': c.palette[1] }}
               >
-                <div className="absolute inset-0" style={{ background: `linear-gradient(140deg, ${c.palette[0]}, ${c.palette[1]})` }} />
-                <div className="absolute inset-0 grain" />
+                <div
+                  className="absolute inset-0 opacity-[0.07]"
+                  style={{ backgroundImage: 'linear-gradient(rgb(var(--bone-rgb)) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--bone-rgb)) 1px, transparent 1px)', backgroundSize: '48px 48px' }}
+                />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -right-[4%] -top-[6%] font-display font-extrabold leading-none text-transparent select-none text-[min(70cqw,30rem)] transition-transform duration-700 group-hover:-translate-x-3"
+                  style={{ WebkitTextStroke: '1.5px rgb(var(--bone-rgb) / 0.12)' }}
+                >
+                  {c.name[0]}
+                </span>
+                <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-[0.15] transition-transform duration-700 group-hover:scale-x-100" style={{ background: 'var(--accent)' }} />
                 <div className="relative p-8 md:p-10">
-                  <p className="m-0 text-xs uppercase tracking-[0.3em] text-snow/70">{c.count} pieces</p>
+                  <p className="m-0 flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-mute">
+                    <span className="h-2 w-2 rounded-full" style={{ background: 'var(--accent)' }} />
+                    {c.count} pieces
+                  </p>
                   <h3 className="font-display font-extrabold text-[min(12.5cqw,6rem)] tracking-tight leading-none mt-2 mb-0">{c.name}</h3>
-                  <p className="mt-3 mb-0 text-lg text-snow/80 max-w-xs">{c.tagline}</p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em]">Explore <span className="transition-transform group-hover:translate-x-2">→</span></span>
+                  <p className="mt-3 mb-0 text-lg text-mute max-w-xs">{c.tagline}</p>
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em]">Explore <span className="transition-transform group-hover:translate-x-2" style={{ color: 'var(--accent)' }}>→</span></span>
                 </div>
                 <div className="relative mt-auto h-[clamp(240px,62cqw,340px)]">
                   {c.featured.slice(0, 3).map((p, j) => (
